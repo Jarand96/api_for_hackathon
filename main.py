@@ -67,6 +67,7 @@ class WizTask(Resource):
 
 class WizUpdate(Resource):
     def post(self):
+        my_var = os.getenv("AUTH_TOKEN")
         try:
             # Sjekk autentisering
             if request.headers.get('Authorization') ==  "Bearer {0}".format(my_var):
@@ -81,7 +82,7 @@ class WizUpdate(Resource):
 
             logging.info(f" Received Wiz data: {data}")
 
-            success = publish_to_pubsub(data, "wiz_update")
+            success = publish_to_pubsub(data, "wiz-update")
             if success:
                 return {'message': 'Data received and published to Pub/Sub'}, 200
             else:
