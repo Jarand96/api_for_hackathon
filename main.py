@@ -2,10 +2,20 @@ from flask import Flask, jsonify, request
 from flask_restful import reqparse, Resource, Api
 import os
 import logging
+# Imports the Cloud Logging client library
+import google.cloud.logging
 
 app = Flask(__name__)
 api = Api(app)
 
+# Instantiates a client
+client = google.cloud.logging.Client()
+
+# Retrieves a Cloud Logging handler based on the environment
+# you're running in and integrates the handler with the
+# Python logging module. By default this captures all logs
+# at INFO level and higher
+client.setup_logging()
 
 class WizTask(Resource):
     def post(self):
@@ -30,5 +40,8 @@ api.add_resource(WizTask, '/case')
 
 
 if __name__ == "__main__":
+
+
+
     logging.basicConfig(level=logging.INFO) 
     app.run()
