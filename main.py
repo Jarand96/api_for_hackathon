@@ -9,6 +9,7 @@ api = Api(app)
 
 class WizTask(Resource):
     def post(self):
+        my_var = os.getenv("AUTH_TOKEN")
         try:
             # Sjekk autentisering
             if request.headers.get('Authorization') ==  my_var:
@@ -31,6 +32,5 @@ api.add_resource(WizTask, '/case')
 
 
 if __name__ == "__main__":
-    my_var = os.getenv("AUTH_TOKEN")
     logging.basicConfig(level=logging.INFO) 
     app.run()
