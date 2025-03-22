@@ -21,10 +21,8 @@ class WizTask(Resource):
                 logging.info(data)
                 # tenant_id = Grab tenant id from auth token  
                 # add tenant id to json object received from customer
-            
-                # This is where we post it to a queue or similar
                 
-                return {'processed_data': processed_data}, 200
+                return {'processed_data': data}, 200
         except Exception as e:
             return {'error': str(e)}, 500
 
