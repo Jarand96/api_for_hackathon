@@ -1,5 +1,7 @@
 from flask import Flask, jsonify, request
 from flask_restful import reqparse, Resource, Api
+import os
+import logging
 
 app = Flask(__name__)
 api = Api(app)
@@ -8,24 +10,27 @@ api = Api(app)
 class WizTask(Resource):
     def post(self):
         try:
-            data = request.get_json()  
-            if not data:
-                return {'message': 'No data provided'}, 400
+            # Sjekk autentisering
+            if request.headers.get('Authorization') ==  my_var:
+
+                data = request.get_json() 
+                if not data:
+                    return {'message': 'No data provided'}, 400
+
+                logging.info(data)
+                # tenant_id = Grab tenant id from auth token  
+                # add tenant id to json object received from customer
             
-            # This is where we post it to a queue or similar
-            processed_data = ""
-            
-            return {'processed_data': processed_data}, 200
+                # This is where we post it to a queue or similar
+                
+                return {'processed_data': processed_data}, 200
         except Exception as e:
             return {'error': str(e)}, 500
 
-api.add_resource(WizTask, '/addTask')
+api.add_resource(WizTask, '/case')
 
 
 if __name__ == "__main__":
+    my_var = os.getenv("AUTH_TOKEN")
+    logging.basicConfig(level=logging.INFO) 
     app.run()
-
-
-
-# This is the "token" i am using for auth as of now
-# 05cc0e19e80cc9d9742fbd3f9195a8de60837d6e085ed8e6b3c0501811b755e2
