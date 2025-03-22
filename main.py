@@ -12,7 +12,7 @@ class WizTask(Resource):
         my_var = os.getenv("AUTH_TOKEN")
         try:
             # Sjekk autentisering
-            if request.headers.get('Authorization') ==  my_var:
+            if request.headers.get('Authentication') ==  "Bearer {0}".format(my_var):
 
                 data = request.get_json() 
                 if not data:
