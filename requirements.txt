@@ -2,4 +2,3 @@ flask
 flask_restful
 google.cloud.logging
 google-cloud-pubsub
-json
