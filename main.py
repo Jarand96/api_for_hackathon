@@ -21,13 +21,13 @@ client.setup_logging()
 
 # Pub/Sub config
 PROJECT_ID = "o3c-jarand-sandbox"
-TOPIC_ID = "wiz-issue"
 
 publisher = pubsub_v1.PublisherClient()
-topic_path = publisher.topic_path(PROJECT_ID, TOPIC_ID)
 
-def publish_to_pubsub(data):
+
+def publish_to_pubsub(data, topic_id):
     """Publiserer JSON-data til Google Cloud Pub/Sub."""
+    topic_path = publisher.topic_path(PROJECT_ID, topic_id)
     try:
         message_bytes = json.dumps(data).encode("utf-8")
         future = publisher.publish(topic_path, data=message_bytes)
@@ -54,7 +54,7 @@ class WizTask(Resource):
 
             logging.info(f" Received Wiz data: {data}")
 
-            success = publish_to_pubsub(data)
+            success = publish_to_pubsub(data, "wiz-issue")
             if success:
                 return {'message': 'Data received and published to Pub/Sub'}, 200
             else:
@@ -65,13 +65,35 @@ class WizTask(Resource):
             return {'error': str(e)}, 500
 
 
+class WizUpdate(Resource):
+    def post(self):
+        try:
+            # Sjekk autentisering
+            if request.headers.get('Authorization') ==  "Bearer {0}".format(my_var):
+                logging.info("Authorization successful")
+            else:
+                logging.info("Authorization failed")
+                return {'error': 'Unauthorized'}, 401
+
+            data = request.get_json()
+            if not data:
+                return {'message': 'No data provided'}, 400
+
+            logging.info(f" Received Wiz data: {data}")
+
+            success = publish_to_pubsub(data, "wiz_update")
+            if success:
+                return {'message': 'Data received and published to Pub/Sub'}, 200
+            else:
+                return {'error': 'Failed to publish to Pub/Sub'}, 500
+
+        except Exception as e:
+            logging.exception("Exception in WizTask")
+            return {'error': str(e)}, 500
+
 api.add_resource(WizTask, '/case')
-
-
+api.add_resource(WizUpdate, '/wizupdate')
 
 if __name__ == "__main__":
-
-
-
     logging.basicConfig(level=logging.INFO) 
     app.run()
