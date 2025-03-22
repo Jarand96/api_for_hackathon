@@ -2,3 +2,6 @@ flask
 flask_restful
 google.cloud.logging
 google-cloud-pubsub
+google.auth.transport
+google.oauth2
+functools
