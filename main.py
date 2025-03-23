@@ -13,6 +13,8 @@ import functools
 app = Flask(__name__)
 api = Api(app)
 
+#os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/Users/jarand/.config/gcloud/application_default_credentials.json"
+#os.environ["GCLOUD_PROJECT"] = "o3c-jarand-sandbox"
 # Instantiates a client
 client = google.cloud.logging.Client()
 
@@ -104,7 +106,7 @@ def wiz_task():
 
 @app.route('/customercase', methods=['POST'])
 @validate_token(audience='https://api-for-hackathon-918861751473.europe-north2.run.app')
-def wiz_task():
+def customer_case():
     # Access the caller identity if needed
     caller = request.caller_identity
     logging.info(f" User logged inn: {data}")
